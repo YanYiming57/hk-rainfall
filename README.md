@@ -1,9 +1,9 @@
-# Assignment 2: Hong Kong Daily Rainfall Visualization
+# Assignment 2: Visualisation of Hourly Predicted Tide Height at Quarry Bay
 
-This chart shows daily rainfall data at Hong Kong Observatory, from data.gov.hk.
+This chart shows hourly predicted astronomical tide height data for Quarry Bay in 2025, published by Hong Kong Observatory Open Data API.
 
-Data source: https://data.weather.gov.hk/weatherAPI/cis/csvfile/HKO/ALL/daily_HKO_RF_ALL.csv
+Data source: https://data.weather.gov.hk/weatherAPI/opendata/opendata.php?dataType=HHOT&station=QUB&year=2025&rformat=csv
 
-![rainfall plot](out/plot.png)
+![tide plot](out/plot.png)
 
-This plot only shows daily total rainfall values. It hides wind speed, humidity and the geographic distribution of rain across Hong Kong.
+This plot only shows predicted tide height over time. It hides real-time sea level changes caused by weather and readings from other tide gauge stations in Hong Kong.
