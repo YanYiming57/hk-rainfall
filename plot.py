@@ -71,16 +71,14 @@ def main():
             f"{rainfall_mm[idx_low]:.1f} mm",
             color=highlight_red, fontsize=10, fontweight="bold")
 
-    # 标题改为只写 Daily rain at HKO
     ax.set_title("Daily rain at HKO", fontsize=16, pad=15)
-    # X轴标签带上起止日期
     ax.set_xlabel(f"Date | {start_date} to {end_date}", fontsize=13)
     ax.set_ylabel("rainfall (mm)", fontsize=13)
     ax.grid(alpha=0.3)
 
-    # 修复X轴日期刻度，自动生成，不会乱
-    locator = mdates.AutoDateLocator(minticks=6, maxticks=12)
-    formatter = mdates.ConciseDateFormatter(locator)
+    # ✅ 强制X轴刻度格式 YYYY-MM-DD，例如 2026-08-05
+    locator = mdates.AutoDateLocator(minticks=6, maxticks=10)
+    formatter = mdates.DateFormatter("%Y-%m-%d")
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
 
