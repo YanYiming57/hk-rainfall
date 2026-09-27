@@ -75,19 +75,19 @@ def main():
     ax.set_xlabel(f"Date | {start_date} to {end_date}", fontsize=13)
     ax.set_ylabel("rainfall (mm)", fontsize=13)
 
-    # X轴：主刻度每7天，文字加粗；次刻度每天一条细线，网格和日期对齐
+    # X轴日期定位：主刻度7天，次刻度每一天
     ax.xaxis.set_major_locator(mdates.DayLocator(interval=7))
     ax.xaxis.set_major_formatter(mdates.DateFormatter("%Y-%m-%d"))
     ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
 
-    # 网格：主网格粗一点，次网格细一点
+    # 网格：主网格粗，次网格细
     ax.grid(True, which="major", alpha=0.4, linestyle="-", linewidth=1.0)
     ax.grid(True, which="minor", alpha=0.2, linestyle="-", linewidth=0.4)
 
-    # ✅ 加粗X轴主刻度文字，加大字号，让日期坐标清晰
-    for label in ax.get_xticklabels(which="major"):
-        label.set_fontweight("bold")
-        label.set_fontsize(11)
+    # ✅ 重点：X轴刻度短竖线（tick）粗细设置
+    ax.tick_params(axis='x', which='major', length=8, width=2)   # 主刻度短竖线：更长、加粗
+    ax.tick_params(axis='x', which='minor', length=4, width=0.8)# 次刻度短竖线：短、细
+    ax.tick_params(axis='y', which='both', length=4, width=0.8) # Y轴保持正常
 
     plt.setp(ax.get_xticklabels(), rotation=40, ha="right")
     ax.margins(x=0, y=0)
@@ -97,7 +97,7 @@ def main():
     plt.tight_layout()
     plt.savefig(img_path, dpi=150)
     plt.show()
-    print("✅ Chart saved, major x-axis date labels are bold.")
+    print("✅ Chart saved, x-axis major tick marks (short vertical lines) are thickened.")
 
 if __name__ == "__main__":
     main()
