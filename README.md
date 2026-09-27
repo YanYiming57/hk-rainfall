@@ -1,5 +1,7 @@
 # rainfall
 This repository visualises 24 consecutive days of daily total rainfall measurements recorded at Hong Kong Observatory. This project transforms raw weather numerical data into a static visualisation for the week 03 assignment: Numbers into pictures.
+![Daily Rainfall Chart](out/plot.png)
+
 
 ## Project Overview
 The dataset is official daily rainfall records from the Hong Kong Observatory. The line chart shows how daily rainfall changes across 24 days. Each red dot represents the total rainfall (mm) for one day. The maximum and minimum rainfall values are annotated on the graph, with text positions automatically adjusted to ensure all labels stay within the plot boundary. The chart uses a warm red colour scheme with a cream background.
