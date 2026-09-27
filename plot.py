@@ -16,7 +16,7 @@ def main():
     all_rows = []
     with open(DATA_FILE, "r", encoding="utf-8-sig", errors="ignore") as f:
         reader = csv.reader(f)
-        next(reader)
+        next(reader) # skip header
         for row in reader:
             if len(row) < 4:
                 continue
@@ -30,17 +30,18 @@ def main():
             except ValueError:
                 continue
 
-    recent_24 = all_rows[-24:]
-    date_list = [item[0] for item in recent_24]
-    rainfall_mm = [item[1] for item in recent_24]
+    # 取最近60条（两个月数据）
+    recent_60 = all_rows[-60:]
+    date_list = [item[0] for item in recent_60]
+    rainfall_mm = [item[1] for item in recent_60]
 
     print(f"Total valid data points: {len(date_list)}")
     start_date = date_list[0].strftime("%Y-%m-%d")
     end_date = date_list[-1].strftime("%Y-%m-%d")
-    print(f"Data range: {start_date} to {end_date}")
+    print(f"✅ Data range (latest 2 months): {start_date} to {end_date}")
 
-    fig, ax = plt.subplots(figsize=(12, 6))
-
+    fig, ax = plt.subplots(figsize=(14, 6))
+    # 颜色：绿色线条填充，极值点深红色
     bg_color = "#fbf0d9"
     line_color = "#0f5132"
     fill_color = "#2da44e"
@@ -49,30 +50,41 @@ def main():
     fig.patch.set_facecolor(bg_color)
     ax.set_facecolor(bg_color)
 
-    ax.plot(date_list, rainfall_mm, color=line_color, linewidth=2.5, marker="o", markersize=5)
+    ax.plot(date_list, rainfall_mm, color=line_color, linewidth=2.0, marker="o", markersize=4)
     ax.fill_between(date_list, rainfall_mm, color=fill_color, alpha=0.22)
 
     idx_high = rainfall_mm.index(max(rainfall_mm))
     idx_low = rainfall_mm.index(min(rainfall_mm))
-    max_day_idx = len(date_list) - 1
 
+    # 最高值标注（深红色）
     ax.scatter(date_list[idx_high], rainfall_mm[idx_high], color=highlight_red, s=110, zorder=5)
     dy_high = 0.04 * max(rainfall_mm)
     ax.text(date_list[idx_high], rainfall_mm[idx_high] + dy_high,
             f"{rainfall_mm[idx_high]:.1f} mm",
-            color=highlight_red, fontsize=11, fontweight="bold")
+            color=highlight_red, fontsize=10, fontweight="bold")
 
+    # 最低值标注（深红色）
     ax.scatter(date_list[idx_low], rainfall_mm[idx_low], color=highlight_red, s=110, zorder=5)
     dy_low = 0.04 * max(rainfall_mm)
     ax.text(date_list[idx_low], rainfall_mm[idx_low] + dy_low,
             f"{rainfall_mm[idx_low]:.1f} mm",
-            color=highlight_red, fontsize=11, fontweight="bold")
+            color=highlight_red, fontsize=10, fontweight="bold")
 
-    ax.set_title(f"Daily Rainfall at HKO — {start_date} to {end_date}", fontsize=16, pad=15)
-    ax.set_xlabel("Date", fontsize=13)
+    ax.set_title(f"Daily Rainfall at HKO — {start_date} to {end_date} (Latest 2 Months)", fontsize=16, pad=15)
+    # X轴标题附带起止日期
+    ax.set_xlabel(f"Date | {start_date} to {end_date}", fontsize=13)
     ax.set_ylabel("rainfall (mm)", fontsize=13)
     ax.grid(alpha=0.3)
-    plt.setp(ax.get_xticklabels(), rotation=30, ha="right")
+
+    # X轴刻度，强制包含最后一天，和其他日期一起显示
+    import matplotlib.dates as mdates
+    locator = mdates.AutoDateLocator(minticks=6, maxticks=12)
+    formatter = mdates.ConciseDateFormatter(locator)
+    ax.xaxis.set_major_locator(locator)
+    ax.xaxis.set_major_formatter(formatter)
+    ax.set_xticks([*ax.get_xticks(), mdates.date2num(date_list[-1])])
+
+    plt.setp(ax.get_xticklabels(), rotation=40, ha="right")
     ax.margins(x=0, y=0)
     ax.set_ylim(bottom=ax.get_ylim()[0], top=ax.get_ylim()[1] * 1.12)
 
@@ -80,7 +92,7 @@ def main():
     plt.tight_layout()
     plt.savefig(img_path, dpi=150)
     plt.show()
-    print("Plot saved.")
+    print("✅ 2-month rainfall chart saved.")
 
 if __name__ == "__main__":
     main()
