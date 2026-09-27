@@ -16,7 +16,7 @@ def main():
     all_rows = []
     with open(DATA_FILE, "r", encoding="utf-8-sig", errors="ignore") as f:
         reader = csv.reader(f)
-        next(reader) # skip header
+        next(reader)
         for row in reader:
             if len(row) < 4:
                 continue
@@ -30,7 +30,6 @@ def main():
             except ValueError:
                 continue
 
-    # 取最后24条，2026最新数据
     recent_24 = all_rows[-24:]
     date_list = [item[0] for item in recent_24]
     rainfall_mm = [item[1] for item in recent_24]
@@ -38,14 +37,14 @@ def main():
     print(f"Total valid data points: {len(date_list)}")
     start_date = date_list[0].strftime("%Y-%m-%d")
     end_date = date_list[-1].strftime("%Y-%m-%d")
-    print(f"✅ NEW DATA RANGE: {start_date} to {end_date}")
+    print(f"Data range: {start_date} to {end_date}")
 
     fig, ax = plt.subplots(figsize=(12, 6))
-    # 颜色设置：米黄色背景 + 全套绿色
+
     bg_color = "#fbf0d9"
     line_color = "#0f5132"
     fill_color = "#2da44e"
-    highlight_green = "#1f7f3f"
+    highlight_red = "#a80000"
 
     fig.patch.set_facecolor(bg_color)
     ax.set_facecolor(bg_color)
@@ -55,31 +54,19 @@ def main():
 
     idx_high = rainfall_mm.index(max(rainfall_mm))
     idx_low = rainfall_mm.index(min(rainfall_mm))
-    max_day_idx = len(date_list)-1
+    max_day_idx = len(date_list) - 1
 
-    # -------- 最高值标注 --------
-    ax.scatter(date_list[idx_high], rainfall_mm[idx_high], color=highlight_green, s=110, zorder=5)
-    if idx_high > max_day_idx * 0.85:
-        dx_high = -0.35
-    else:
-        dx_high = 0.25
+    ax.scatter(date_list[idx_high], rainfall_mm[idx_high], color=highlight_red, s=110, zorder=5)
     dy_high = 0.04 * max(rainfall_mm)
     ax.text(date_list[idx_high], rainfall_mm[idx_high] + dy_high,
             f"{rainfall_mm[idx_high]:.1f} mm",
-            color=highlight_green, fontsize=11, fontweight="bold")
+            color=highlight_red, fontsize=11, fontweight="bold")
 
-    # -------- 最低值标注（文字向上，不会跑出图框） --------
-    ax.scatter(date_list[idx_low], rainfall_mm[idx_low], color=highlight_green, s=110, zorder=5)
-    if idx_low < max_day_idx * 0.15:
-        dx_low = 0.25
-    elif idx_low > max_day_idx * 0.85:
-        dx_low = -0.35
-    else:
-        dx_low = 0.25
+    ax.scatter(date_list[idx_low], rainfall_mm[idx_low], color=highlight_red, s=110, zorder=5)
     dy_low = 0.04 * max(rainfall_mm)
     ax.text(date_list[idx_low], rainfall_mm[idx_low] + dy_low,
             f"{rainfall_mm[idx_low]:.1f} mm",
-            color=highlight_green, fontsize=11, fontweight="bold")
+            color=highlight_red, fontsize=11, fontweight="bold")
 
     ax.set_title(f"Daily Rainfall at HKO — {start_date} to {end_date}", fontsize=16, pad=15)
     ax.set_xlabel("Date", fontsize=13)
@@ -93,7 +80,7 @@ def main():
     plt.tight_layout()
     plt.savefig(img_path, dpi=150)
     plt.show()
-    print("✅ New green chart saved with latest 2026 rainfall data!")
+    print("Plot saved.")
 
 if __name__ == "__main__":
     main()
