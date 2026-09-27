@@ -5,6 +5,7 @@
 from pathlib import Path
 import csv
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from datetime import datetime
 
 HERE = Path(__file__).parent
@@ -70,19 +71,18 @@ def main():
             f"{rainfall_mm[idx_low]:.1f} mm",
             color=highlight_red, fontsize=10, fontweight="bold")
 
-    ax.set_title(f"Daily Rainfall at HKO — {start_date} to {end_date} (Latest 2 Months)", fontsize=16, pad=15)
-    # X轴标题附带起止日期
+    # 标题改为只写 Daily rain at HKO
+    ax.set_title("Daily rain at HKO", fontsize=16, pad=15)
+    # X轴标签带上起止日期
     ax.set_xlabel(f"Date | {start_date} to {end_date}", fontsize=13)
     ax.set_ylabel("rainfall (mm)", fontsize=13)
     ax.grid(alpha=0.3)
 
-    # X轴刻度，强制包含最后一天，和其他日期一起显示
-    import matplotlib.dates as mdates
+    # 修复X轴日期刻度，自动生成，不会乱
     locator = mdates.AutoDateLocator(minticks=6, maxticks=12)
     formatter = mdates.ConciseDateFormatter(locator)
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
-    ax.set_xticks([*ax.get_xticks(), mdates.date2num(date_list[-1])])
 
     plt.setp(ax.get_xticklabels(), rotation=40, ha="right")
     ax.margins(x=0, y=0)
@@ -92,7 +92,7 @@ def main():
     plt.tight_layout()
     plt.savefig(img_path, dpi=150)
     plt.show()
-    print("✅ 2-month rainfall chart saved.")
+    print("✅ Chart saved.")
 
 if __name__ == "__main__":
     main()
