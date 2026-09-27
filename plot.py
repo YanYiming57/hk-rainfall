@@ -74,10 +74,13 @@ def main():
     ax.set_title("Daily rain at HKO", fontsize=16, pad=15)
     ax.set_xlabel(f"Date | {start_date} to {end_date}", fontsize=13)
     ax.set_ylabel("rainfall (mm)", fontsize=13)
-    ax.grid(alpha=0.3)
 
-    # ✅ 强制X轴刻度格式 YYYY-MM-DD，例如 2026-08-05
-    locator = mdates.AutoDateLocator(minticks=6, maxticks=10)
+    # ========== 增加网格线：主网格+次网格，刻度更多 ==========
+    ax.grid(True, which="both", alpha=0.3, linestyle="-")
+    ax.minorticks_on()
+
+    # X轴日期格式 YYYY-MM-DD
+    locator = mdates.AutoDateLocator(minticks=8, maxticks=14)
     formatter = mdates.DateFormatter("%Y-%m-%d")
     ax.xaxis.set_major_locator(locator)
     ax.xaxis.set_major_formatter(formatter)
@@ -90,7 +93,7 @@ def main():
     plt.tight_layout()
     plt.savefig(img_path, dpi=150)
     plt.show()
-    print("✅ Chart saved.")
+    print("✅ Chart saved with more grid ticks.")
 
 if __name__ == "__main__":
     main()
